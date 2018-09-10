@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class BookCopyDto {
 
     private long id;
-   // private long titleId;
     private String bookCopyStatus;
-
+    private long titleId;
+    private List<Clerk> bookCopyId;
 }

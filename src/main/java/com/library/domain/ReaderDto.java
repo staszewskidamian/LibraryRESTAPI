@@ -1,13 +1,11 @@
 package com.library.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
-import java.sql.SQLData;
 import java.time.LocalDate;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,5 +16,5 @@ public class ReaderDto {
     private String readerName;
     private String readerSecondName;
     private LocalDate timeStarted;
-
+    private List<Clerk> readerId;
 }

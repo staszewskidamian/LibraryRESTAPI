@@ -25,6 +25,22 @@ public class DbService {
     @Autowired
     private ClerkRepository clerkRepository;
 
+    public BookTitles getBookTitleById(final long id) {
+        return bookTitlesRepository.findById(id).orElse(null);
+    }
+
+    public Reader getReaderById(final long id) {
+        return readerRepository.findById(id).orElse(null);
+    }
+
+    public BookCopy getBookCopyById(final long id) {
+        return bookCopyRepository.findByCopyId(id).orElse(null);
+    }
+
+    public Clerk getClerkById(final long id) {
+        return clerkRepository.findById(id).orElse(null);
+    }
+
     public Reader saveReader(final Reader reader) {
         return readerRepository.save(reader);
     }
@@ -37,12 +53,12 @@ public class DbService {
         return bookCopyRepository.save(bookCopy);
     }
 
-//    public Long countCopies(final String title) {
-//        return bookCopyRepository.findAll().stream()
-//                .filter(i -> i.getBookCopyStatus().equals("available"))
-//                .filter(i -> i.getBookTitles().getTitle().equals(title))
-//                .count();
-//    }
+    public Long countCopies(final String title) {
+        return bookCopyRepository.findAll().stream()
+                .filter(i -> i.getBookCopyStatus().equals("available"))
+                .filter(i -> i.getBookTitles().getTitle().equals(title))
+                .count();
+    }
 
     public Clerk clerkSave(final Clerk clerk) {
         return clerkRepository.save(clerk);
@@ -63,5 +79,4 @@ public class DbService {
     public List<BookCopy> getAlBookCopies() {
         return bookCopyRepository.findAll();
     }
-
 }

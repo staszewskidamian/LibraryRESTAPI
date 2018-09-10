@@ -2,8 +2,7 @@ package com.library.mapper;
 
 import com.library.domain.BookCopy;
 import com.library.domain.BookCopyDto;
-import com.library.repository.BookTitlesRepository;
-import com.library.repository.ClerkRepository;
+import com.library.service.DbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,30 +13,30 @@ import java.util.stream.Collectors;
 public class BookCopyMapper {
 
     @Autowired
-    private BookTitlesRepository bookTitlesRepository;
-    @Autowired
-    private ClerkRepository clerkRepository;
+    private DbService dbService;
 
     public BookCopy mapToBookCopy(final BookCopyDto bookCopyDto) {
         return new BookCopy(
                 bookCopyDto.getId(),
-                bookCopyDto.getBookCopyStatus()
-               // bookTitlesRepository.findByBookCopies(bookCopyDto.getTitleId()).get()
-
+                bookCopyDto.getBookCopyStatus(),
+                dbService.getBookTitleById(bookCopyDto.getTitleId()),
+                bookCopyDto.getBookCopyId()
         );
     }
 
     public BookCopyDto mapToBookCopyDto(final BookCopy bookCopy) {
         return new BookCopyDto(
-                bookCopy.getId(),
-             //   bookCopy.getBookTitles().getId(),
-                bookCopy.getBookCopyStatus()
+                bookCopy.getCopyId(),
+                bookCopy.getBookCopyStatus(),
+                bookCopy.getBookTitles().getId(),
+                bookCopy.getBookCopyId()
         );
     }
 
     public List<BookCopyDto> mapToBookCopyDtoList(final List<BookCopy> bookCopies) {
         return bookCopies.stream()
-                .map(t -> new BookCopyDto(t.getId() , t.getBookCopyStatus()))
+                .map(t -> new BookCopyDto(t.getCopyId(), t.getBookCopyStatus(), t.getBookTitles().getId(),
+                        t.getBookCopyId()))
                 .collect(Collectors.toList());
     }
 }

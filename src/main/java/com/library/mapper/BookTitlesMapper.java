@@ -2,8 +2,6 @@ package com.library.mapper;
 
 import com.library.domain.BookTitles;
 import com.library.domain.BookTitlesDto;
-import com.library.repository.BookCopyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,16 +10,13 @@ import java.util.stream.Collectors;
 @Component
 public class BookTitlesMapper {
 
-    @Autowired
-    private BookCopyRepository bookCopyRepository;
-
     public BookTitles mapToBookTitles(final BookTitlesDto bookTitlesDto) {
         return new BookTitles(
-                bookTitlesDto.getTitleId(),
+                bookTitlesDto.getId(),
                 bookTitlesDto.getTitle(),
                 bookTitlesDto.getAuthor(),
-                bookTitlesDto.getPublicationYear()
-              //  bookCopyRepository.findAll()
+                bookTitlesDto.getPublicationYear(),
+                bookTitlesDto.getBookCopies()
         );
     }
 
@@ -30,15 +25,15 @@ public class BookTitlesMapper {
                 bookTitles.getId(),
                 bookTitles.getTitle(),
                 bookTitles.getAuthor(),
-                bookTitles.getPublicationYear()
+                bookTitles.getPublicationYear(),
+                bookTitles.getBookCopies()
         );
     }
 
     public List<BookTitlesDto> mapToBookTitlesDtoList(final List<BookTitles> bookTitles) {
         return bookTitles.stream()
-                .map(t -> new BookTitlesDto(t.getId(), t.getAuthor(),
-                        t.getTitle(), t.getPublicationYear()))
+                .map(t -> new BookTitlesDto(t.getId(), t.getTitle(), t.getAuthor(),
+                        t.getPublicationYear(), t.getBookCopies()))
                 .collect(Collectors.toList());
     }
-
 }

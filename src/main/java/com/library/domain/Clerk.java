@@ -3,12 +3,12 @@ package com.library.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-
+@Component
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -19,17 +19,16 @@ public class Clerk {
     private long id;
 
     @Column(name = "checkOut")
-    private String checkOut;
-
+    private LocalDate checkOut;
 
     @Column(name = "checkIn")
-    private String checkIn;
+    private LocalDate checkIn;
 
     @ManyToOne
-    @JoinColumn(name = "readerId")
+    @JoinColumn(name = "readers")
     private Reader reader;
 
-//    @ManyToOne
-//    @JoinColumn(name = "clerksId")
-//    private BookCopy bookCopy;
+    @ManyToOne
+    @JoinColumn(name = "copies")
+    private BookCopy bookCopy;
 }

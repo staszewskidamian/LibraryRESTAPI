@@ -16,18 +16,18 @@ public class BookCopy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long copyId;
 
     @Column(name = "status")
     private String bookCopyStatus;
 
-//    @ManyToOne
-//    @JoinColumn(name = "titleId")
-//    private BookTitles bookTitles;
+    @ManyToOne
+    @JoinColumn(name = "titleId")
+    private BookTitles bookTitles;
 
-//    @OneToMany(targetEntity = Clerk.class,
-//            mappedBy = "bookCopy",
-//            cascade = CascadeType.ALL)
-//        private List<Clerk> clerksId = new ArrayList<>();
+    @OneToMany(targetEntity = Clerk.class,
+            mappedBy = "bookCopy",
+            cascade = CascadeType.ALL)
+    private List<Clerk> bookCopyId = new ArrayList<>();
 
 }
