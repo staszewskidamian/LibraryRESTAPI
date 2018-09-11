@@ -15,7 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -150,6 +152,7 @@ public class LibraryControllerTest {
         BookCopyDto bookCopyDto = new BookCopyDto(1, "lost", 1, new ArrayList<>());
         BookTitles bookTitles = new BookTitles(1, null, null, null, null);
         when(service.getBookCopyById(1)).thenReturn(new BookCopy(1, null, bookTitles, null));
+        when(bookCopyMapper.mapToBookCopyDto(service.saveBookCopy(bookCopyMapper.mapToBookCopy(any(BookCopyDto.class))))).thenReturn(bookCopyDto);
         Gson gson = new Gson();
         String jsonContent = gson.toJson(bookCopyDto);
         //When & Then
@@ -158,7 +161,7 @@ public class LibraryControllerTest {
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
                 .andExpect(status().is(200));
-        verify(service, times(1)).saveBookCopy(any());
+        verify(service, times(2)).saveBookCopy(any());
     }
 
     @Test
@@ -167,7 +170,9 @@ public class LibraryControllerTest {
         Reader reader = new Reader(1, null, null, null, null);
         BookCopy bookCopy = new BookCopy(1, null, null, null);
         Clerk clerk = new Clerk(1, LocalDate.now(), LocalDate.now(), reader, bookCopy);
+        ClerkDto clerkDto = new ClerkDto(1, LocalDate.now(), LocalDate.now(), 1, 1);
         when(service.getClerkById(1)).thenReturn(clerk);
+        when(clerkMapper.mapToClerkDto(service.clerkSave(clerkMapper.mapToClerk(any(ClerkDto.class))))).thenReturn(clerkDto);
         Gson gson = new Gson();
         String jsonContent = gson.toJson(clerk);
         //When & Then
@@ -177,6 +182,24 @@ public class LibraryControllerTest {
                 .param("clerkId", "1")
                 .content(jsonContent))
                 .andExpect(status().is(200));
-        verify(service, times(1)).clerkSave(any());
+        verify(service, times(2)).clerkSave(any());
     }
+
+    @Test
+    public void shouldGetTitles() throws Exception {
+        //Given
+        List<BookTitlesDto> bookTitlesDtoList = new ArrayList<>();
+        bookTitlesDtoList.add(new BookTitlesDto());
+        bookTitlesDtoList.add(new BookTitlesDto());
+        when(bookTitlesMapper.mapToBookTitlesDtoList(service.getAlBookTitles())).thenReturn(bookTitlesDtoList);
+        //When & Then
+        mockMvc.perform(get("/library/getTitles")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].title", isEmptyOrNullString()))
+                .andExpect(jsonPath("$[0].author", isEmptyOrNullString()))
+                .andExpect(jsonPath("$[1].id", is(0)));
+    }
+
 }
